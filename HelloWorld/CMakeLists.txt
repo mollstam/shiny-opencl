@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.0)
 
 project (OpenCL_HelloWorld)
 
@@ -11,12 +11,16 @@ set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake")
 
 if (APPLE)
 	find_library(OPENCL_LIBRARY OpenCL)
-endif (APPLE)
-if (WIN32)
+elseif (UNIX)
+	set(CMAKE_C_FLAGS "-std=c99")
+	include_directories("/opt/AMDAPPSDK-2.9-1/include")
+	link_directories("/opt/AMDAPPSDK-2.9-1/lib/x86_64")
+	set (OPENCL_LIBRARY OpenCL)
+elseif (WIN32)
 	include_directories("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v7.0\\include")
 	link_directories("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v7.0\\lib\\x64")
 	set (OPENCL_LIBRARY OpenCL)
-endif(WIN32)
+endif(APPLE)
 
 add_executable(HelloWorld Source/main.c Source/err_code.h)
 set_target_properties(HelloWorld PROPERTIES LINKER_LANGUAGE C)
