@@ -64,7 +64,32 @@ int main(int argc, char** argv)
         {
             err = clGetDeviceInfo(device[j], CL_DEVICE_NAME, sizeof(string), &string, NULL);
             check_error(err, "Getting device name");
-            printf("   *  %s\n", string);
+            printf("   *  %s [", string);
+            
+            cl_device_type device_type;
+            err = clGetDeviceInfo(device[j], CL_DEVICE_TYPE, sizeof(device_type), &device_type, NULL);
+            int type_count = 0;
+            if (device_type & CL_DEVICE_TYPE_CPU)
+            {
+                printf("%sCPU", type_count ? " " : "");
+                ++type_count;
+            }
+            if (device_type & CL_DEVICE_TYPE_GPU)
+            {
+                printf("%sGPU", type_count ? " " : "");
+                ++type_count;
+            }
+            if (device_type & CL_DEVICE_TYPE_ACCELERATOR)
+            {
+                printf("%sACCELERATOR", type_count ? " " : "");
+                ++type_count;
+            }
+            if (device_type & CL_DEVICE_TYPE_DEFAULT)
+            {
+                printf("%sDEFAULT", type_count ? " " : "");
+                ++type_count;
+            }
+            printf("]\n");
         }
     }
     
